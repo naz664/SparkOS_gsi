@@ -1,0 +1,38 @@
+From 8681abf5a6eb90ab5ead0dbc39d0bd6b48878e89 Mon Sep 17 00:00:00 2001
+From: mqi <mqi@codeaurora.org>
+Date: Fri, 7 Jul 2017 15:20:06 +0800
+Subject: [PATCH 09/19] SystemUI: Fix SystemUI Crash
+
+SystemUI may crash sometimes in monkey test due to exception.
+
+Catch the exception to avoid the crash.
+
+Change-Id: I548be5c6465f3c7a81c33d1cfa9b30e7269fd86d
+---
+ .../systemui/statusbar/policy/UserInfoControllerImpl.java  | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+ mode change 100644 => 100755 packages/SystemUI/src/com/android/systemui/statusbar/policy/UserInfoControllerImpl.java
+
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/policy/UserInfoControllerImpl.java b/packages/SystemUI/src/com/android/systemui/statusbar/policy/UserInfoControllerImpl.java
+old mode 100644
+new mode 100755
+index 29285f886f..82c51d45b9
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/policy/UserInfoControllerImpl.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/policy/UserInfoControllerImpl.java
+@@ -123,7 +123,12 @@ public class UserInfoControllerImpl implements UserInfoController {
+             mUserInfoTask.cancel(false);
+             mUserInfoTask = null;
+         }
+-        queryForUserInformation();
++
++        try {
++            queryForUserInformation();
++        } catch (Exception e) {
++            Log.e(TAG, "Couldn't query user info", e);
++        }
+     }
+ 
+     private void queryForUserInformation() {
+-- 
+2.34.1
+

@@ -1,0 +1,26 @@
+From 090cfefb7eb3b54db2ae1e028932c81d4a4c1824 Mon Sep 17 00:00:00 2001
+From: Adhitya Mohan <me@adhityamohan.in>
+Date: Sat, 27 Jun 2020 16:36:27 +0530
+Subject: [PATCH 13/19] Calm down attention service logspam
+
+Change-Id: Ie5f04a7a875d918db9b09f5aa1ed0b0592a1d48c
+---
+ .../com/android/server/attention/AttentionManagerService.java   | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/services/core/java/com/android/server/attention/AttentionManagerService.java b/services/core/java/com/android/server/attention/AttentionManagerService.java
+index d16fe1240d..0a6c43272e 100644
+--- a/services/core/java/com/android/server/attention/AttentionManagerService.java
++++ b/services/core/java/com/android/server/attention/AttentionManagerService.java
+@@ -463,7 +463,7 @@ public class AttentionManagerService extends SystemService {
+ 
+         final ResolveInfo resolveInfo = context.getPackageManager().resolveService(intent, flags);
+         if (resolveInfo == null || resolveInfo.serviceInfo == null) {
+-            Slog.wtf(LOG_TAG, String.format("Service %s not found in package %s",
++            Slog.v(LOG_TAG, String.format("Service %s not found in package %s",
+                     AttentionService.SERVICE_INTERFACE, serviceConfigPackage
+             ));
+             return null;
+-- 
+2.34.1
+

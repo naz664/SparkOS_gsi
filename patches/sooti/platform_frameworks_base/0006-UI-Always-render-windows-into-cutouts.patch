@@ -1,0 +1,46 @@
+From 4e00762b8e6cb9be09c35b933f504c188b7c9cb1 Mon Sep 17 00:00:00 2001
+From: Andy CrossGate Yan <GeForce8800Ultra@gmail.com>
+Date: Tue, 30 Aug 2022 11:19:04 +0300
+Subject: [PATCH 06/19] UI: Always render windows into cutouts
+
+Eliminates black/white letterboxing
+Quick and dirty way to do the latter - wait for proper fix from Google
+
+Change-Id: I984b6a3d77b7b03eafa099f22ded63af4147ea32
+---
+ .../com/android/server/wm/DisplayFrames.java  | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
+
+diff --git a/services/core/java/com/android/server/wm/DisplayFrames.java b/services/core/java/com/android/server/wm/DisplayFrames.java
+index fd06313205..97989e086c 100644
+--- a/services/core/java/com/android/server/wm/DisplayFrames.java
++++ b/services/core/java/com/android/server/wm/DisplayFrames.java
+@@ -99,21 +99,10 @@ public class DisplayFrames {
+         state.setRoundedCorners(roundedCorners);
+         state.setPrivacyIndicatorBounds(indicatorBounds);
+         state.getDisplayCutoutSafe(safe);
+-        if (!cutout.isEmpty()) {
+-            state.getSource(ITYPE_LEFT_DISPLAY_CUTOUT).setFrame(
+-                    unrestricted.left, unrestricted.top, safe.left, unrestricted.bottom);
+-            state.getSource(ITYPE_TOP_DISPLAY_CUTOUT).setFrame(
+-                    unrestricted.left, unrestricted.top, unrestricted.right, safe.top);
+-            state.getSource(ITYPE_RIGHT_DISPLAY_CUTOUT).setFrame(
+-                    safe.right, unrestricted.top, unrestricted.right, unrestricted.bottom);
+-            state.getSource(ITYPE_BOTTOM_DISPLAY_CUTOUT).setFrame(
+-                    unrestricted.left, safe.bottom, unrestricted.right, unrestricted.bottom);
+-        } else {
+-            state.removeSource(ITYPE_LEFT_DISPLAY_CUTOUT);
+-            state.removeSource(ITYPE_TOP_DISPLAY_CUTOUT);
+-            state.removeSource(ITYPE_RIGHT_DISPLAY_CUTOUT);
+-            state.removeSource(ITYPE_BOTTOM_DISPLAY_CUTOUT);
+-        }
++        state.removeSource(ITYPE_LEFT_DISPLAY_CUTOUT);
++        state.removeSource(ITYPE_TOP_DISPLAY_CUTOUT);
++        state.removeSource(ITYPE_RIGHT_DISPLAY_CUTOUT);
++        state.removeSource(ITYPE_BOTTOM_DISPLAY_CUTOUT);
+         return true;
+     }
+ 
+-- 
+2.34.1
+

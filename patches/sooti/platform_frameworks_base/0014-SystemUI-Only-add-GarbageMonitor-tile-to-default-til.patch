@@ -1,0 +1,27 @@
+From 5b44fe459e6bf9535ce970730f3c56d6d8949ea1 Mon Sep 17 00:00:00 2001
+From: Arne Coucheron <arco68@gmail.com>
+Date: Sun, 2 Feb 2020 00:47:29 +0100
+Subject: [PATCH 14/19] SystemUI: Only add GarbageMonitor tile to default tiles
+ on ENG builds
+
+Change-Id: Ice1bab5f3d1b3a15f20085cfb7f5578c7f70855a
+---
+ packages/SystemUI/src/com/android/systemui/qs/QSTileHost.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/QSTileHost.java b/packages/SystemUI/src/com/android/systemui/qs/QSTileHost.java
+index fbdabc74ab..7f192f58db 100644
+--- a/packages/SystemUI/src/com/android/systemui/qs/QSTileHost.java
++++ b/packages/SystemUI/src/com/android/systemui/qs/QSTileHost.java
+@@ -555,7 +555,7 @@ public class QSTileHost implements QSHost, Tunable, PluginListener<QSFactory>, D
+         final String defaultTileList = res.getString(R.string.quick_settings_tiles_default);
+ 
+         tiles.addAll(Arrays.asList(defaultTileList.split(",")));
+-        if (Build.IS_DEBUGGABLE
++        if (Build.IS_ENG
+                 && GarbageMonitor.ADD_MEMORY_TILE_TO_DEFAULT_ON_DEBUGGABLE_BUILDS) {
+             tiles.add(GarbageMonitor.MemoryTile.TILE_SPEC);
+         }
+-- 
+2.34.1
+
