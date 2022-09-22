@@ -1,0 +1,37 @@
+From 48dd9bb53f1f30c745cf39192a94bdf70bb0ae5a Mon Sep 17 00:00:00 2001
+From: Peter Cai <peter@typeblog.net>
+Date: Tue, 12 Oct 2021 21:37:22 -0400
+Subject: [PATCH 27/30] PackageParser: support glob matching for properties
+
+Needed to make phh's vendor overlays work
+---
+ core/java/android/content/pm/PackageParser.java | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/core/java/android/content/pm/PackageParser.java b/core/java/android/content/pm/PackageParser.java
+index ca401d28..ec71d9b4 100644
+--- a/core/java/android/content/pm/PackageParser.java
++++ b/core/java/android/content/pm/PackageParser.java
+@@ -2536,14 +2536,14 @@ public class PackageParser {
+             // Check property value: make sure it is both set and equal to expected value
+             final String currValue = SystemProperties.get(propNames[i]);
+             final String value = propValues[i];
+-            if(value.startsWith("+")) {
+-                final java.util.regex.Pattern regex = java.util.regex.Pattern.compile(value.substring(1, value.length()).replace("*", ".*"));
+-                java.util.regex.Matcher matcher = regex.matcher(currValue);
+-                if (!matcher.find()) {
++            if (propValues[i].startsWith("+") && propValues[i].endsWith("*")) {
++                // Glob matching
++                int idx = TextUtils.indexOf(currValue, propValues[i].substring(1, propValues[i].length() - 1));
++                if (idx < 0) {
+                     return false;
+                 }
+             } else {
+-                if(!value.equals(currValue)) {
++                if (!TextUtils.equals(currValue, propValues[i])) {
+                     return false;
+                 }
+             }
+-- 
+2.37.3
+

@@ -1,0 +1,94 @@
+From 1a4f754da9775375b0fd3b0c644da83679b49108 Mon Sep 17 00:00:00 2001
+From: Pierre-Hugues Husson <phh@phh.me>
+Date: Fri, 17 Dec 2021 17:18:20 -0500
+Subject: [PATCH 09/13] On Samsung devices for FOD HBM, set specific usage bits
+
+Change-Id: Ibe71e291c6fba9ce48e83a5fd93f1beae3a63bc7
+---
+ libs/gui/BLASTBufferQueue.cpp | 18 ++++++++++++++++--
+ libs/ui/Gralloc2.cpp          |  2 +-
+ libs/ui/Gralloc3.cpp          |  1 +
+ libs/ui/Gralloc4.cpp          |  2 +-
+ 4 files changed, 19 insertions(+), 4 deletions(-)
+
+diff --git a/libs/gui/BLASTBufferQueue.cpp b/libs/gui/BLASTBufferQueue.cpp
+index dbccf30fae..11487a3f10 100644
+--- a/libs/gui/BLASTBufferQueue.cpp
++++ b/libs/gui/BLASTBufferQueue.cpp
+@@ -33,9 +33,18 @@
+ #include <utils/Trace.h>
+ 
+ #include <private/gui/ComposerService.h>
++#include <cutils/properties.h>
+ 
+ #include <chrono>
+ 
++static bool sCheckedProps = false;
++static bool sSamsungFod = false;
++static void init_fod_props() {
++    if(sCheckedProps) return;
++    sCheckedProps = true;
++    sSamsungFod = property_get_bool("persist.sys.phh.fod.samsung", false);
++}
++
+ using namespace std::chrono_literals;
+ 
+ namespace {
+@@ -147,9 +156,14 @@ BLASTBufferQueue::BLASTBufferQueue(const std::string& name, bool updateDestinati
+ 
+     // safe default, most producers are expected to override this
+     mProducer->setMaxDequeuedBufferCount(2);
++    uint64_t usage = GraphicBuffer::USAGE_HW_COMPOSER |
++        GraphicBuffer::USAGE_HW_TEXTURE;
++    init_fod_props();
++    if(sSamsungFod && name.find("SurfaceView[UdfpsController]") != std::string::npos) {
++	    usage |= 0x400000000LL;
++    }
+     mBufferItemConsumer = new BLASTBufferItemConsumer(mConsumer,
+-                                                      GraphicBuffer::USAGE_HW_COMPOSER |
+-                                                              GraphicBuffer::USAGE_HW_TEXTURE,
++                                                      usage,
+                                                       1, false, this);
+     static int32_t id = 0;
+     mName = name + "#" + std::to_string(id);
+diff --git a/libs/ui/Gralloc2.cpp b/libs/ui/Gralloc2.cpp
+index f23f10a1a9..47d7a65379 100644
+--- a/libs/ui/Gralloc2.cpp
++++ b/libs/ui/Gralloc2.cpp
+@@ -108,7 +108,7 @@ status_t Gralloc2Mapper::validateBufferDescriptorInfo(
+     if (descriptorInfo->usage & ~validUsageBits) {
+         ALOGE("buffer descriptor contains invalid usage bits 0x%" PRIx64,
+               descriptorInfo->usage & ~validUsageBits);
+-        return BAD_VALUE;
++        return NO_ERROR;;
+     }
+ 
+     // Gralloc2 implementations never understand non-BLOB with GPU_DATA_BUFFER
+diff --git a/libs/ui/Gralloc3.cpp b/libs/ui/Gralloc3.cpp
+index 15c60bcadf..287611f581 100644
+--- a/libs/ui/Gralloc3.cpp
++++ b/libs/ui/Gralloc3.cpp
+@@ -100,6 +100,7 @@ status_t Gralloc3Mapper::validateBufferDescriptorInfo(
+         ALOGE("buffer descriptor contains invalid usage bits 0x%" PRIx64,
+               descriptorInfo->usage & ~validUsageBits);
+         return BAD_VALUE;
++        return NO_ERROR;        
+     }
+ 
+     // Gralloc3 implementations never understand non-BLOB with GPU_DATA_BUFFER
+diff --git a/libs/ui/Gralloc4.cpp b/libs/ui/Gralloc4.cpp
+index f6ab7b2a5e..dfd5bb8c53 100644
+--- a/libs/ui/Gralloc4.cpp
++++ b/libs/ui/Gralloc4.cpp
+@@ -120,7 +120,7 @@ static status_t validateBufferDescriptorInfo(IMapper::BufferDescriptorInfo* desc
+     if (descriptorInfo->usage & ~validUsageBits) {
+         ALOGE("buffer descriptor contains invalid usage bits 0x%" PRIx64,
+               descriptorInfo->usage & ~validUsageBits);
+-        return BAD_VALUE;
++        return NO_ERROR;
+     }
+ 
+     // Combinations that are only allowed with gralloc 4.1.
+-- 
+2.37.3
+

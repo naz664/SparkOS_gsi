@@ -1,0 +1,30 @@
+From 928e67c5bd5a60b7d3b92b0e38c52acfb38f02cc Mon Sep 17 00:00:00 2001
+From: Pierre-Hugues Husson <phh@phh.me>
+Date: Mon, 21 Dec 2020 20:19:11 +0100
+Subject: [PATCH 09/20] Make camera IDs filter-out optional
+
+Nowadays most people have Camera 2 apps, and would like to have all
+cameras, rather than limit which cameras are available.
+Add a property for that.
+---
+ .../camera/libcameraservice/common/CameraProviderManager.cpp  | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/services/camera/libcameraservice/common/CameraProviderManager.cpp b/services/camera/libcameraservice/common/CameraProviderManager.cpp
+index abaea66..8ecdb88 100644
+--- a/services/camera/libcameraservice/common/CameraProviderManager.cpp
++++ b/services/camera/libcameraservice/common/CameraProviderManager.cpp
+@@ -245,7 +245,9 @@ std::vector<std::string> CameraProviderManager::getAPI1CompatibleCameraDeviceIds
+         // API1 app doesn't handle logical and physical camera devices well. So
+         // for each camera facing, only take the first id advertised by HAL in
+         // all [logical, physical1, physical2, ...] id combos, and filter out the rest.
+-        filterLogicalCameraIdsLocked(providerDeviceIds);
++        if(!property_get_bool("persist.sys.phh.include_all_cameras", false)) {
++            filterLogicalCameraIdsLocked(providerDeviceIds);
++        }
+         collectDeviceIdsLocked(providerDeviceIds, publicDeviceIds, systemDeviceIds);
+     }
+     auto sortFunc =
+-- 
+2.37.3
+
