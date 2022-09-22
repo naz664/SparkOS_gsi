@@ -1,0 +1,51 @@
+From 197f1263d9fdc29ea52d3038c8f6b83df8446636 Mon Sep 17 00:00:00 2001
+From: naz664 <nazimnavas145@gmail.com>
+Date: Mon, 12 Sep 2022 14:16:28 +0000
+Subject: [PATCH 3/3] fix-offline-charger-v7.patch
+
+---
+ rootdir/init.rc | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/rootdir/init.rc b/rootdir/init.rc
+index ed5d32c46..f0a7f7024 100644
+--- a/rootdir/init.rc
++++ b/rootdir/init.rc
+@@ -11,6 +11,11 @@ import /vendor/etc/init/hw/init.${ro.hardware}.rc
+ import /system/etc/init/hw/init.usb.configfs.rc
+ import /system/etc/init/hw/init.${ro.zygote}.rc
+ 
++service gsicharger /bin/charger
++    class gsicharger
++    user system
++    group system shell input graphics wakelock
++
+ # Cgroups are mounted right before early-init using list from /etc/cgroups.json
+ on early-init
+     # Disable sysrq from keyboard
+@@ -505,7 +510,7 @@ on init
+ # Healthd can trigger a full boot from charger mode by signaling this
+ # property when the power button is held.
+ on property:sys.boot_from_charger_mode=1
+-    class_stop charger
++    class_stop gsicharger
+     trigger late-init
+ 
+ # Indicate to fw loaders that the relevant mounts are up.
+@@ -1175,8 +1180,12 @@ on nonencrypted
+ on property:sys.init_log_level=*
+     loglevel ${sys.init_log_level}
+ 
++on charger && property:ro.hardware=mt*
++    write /sys/class/leds/lcd-backlight/trigger "backlight"
++    write /sys/class/android_usb/android0/enable 1
++
+ on charger
+-    class_start charger
++    class_start gsicharger
+ 
+ on property:sys.boot_completed=1
+     bootchart stop
+-- 
+2.25.1
+

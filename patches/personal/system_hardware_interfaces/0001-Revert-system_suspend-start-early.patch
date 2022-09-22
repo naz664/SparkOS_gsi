@@ -1,0 +1,24 @@
+From b03f166c2e0a4c722d2b4ce7f3164832ff229786 Mon Sep 17 00:00:00 2001
+From: naz664 <nazimnavas145@gmail.com>
+Date: Thu, 22 Sep 2022 14:02:52 +0000
+Subject: [PATCH] Revert-system_suspend-start-early
+
+Change-Id: I0e5407d2e7b691076c84dedf74c644d0f3fe3ad0
+---
+ suspend/1.0/default/android.system.suspend@1.0-service.rc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/suspend/1.0/default/android.system.suspend@1.0-service.rc b/suspend/1.0/default/android.system.suspend@1.0-service.rc
+index 965ca16..c5d3869 100644
+--- a/suspend/1.0/default/android.system.suspend@1.0-service.rc
++++ b/suspend/1.0/default/android.system.suspend@1.0-service.rc
+@@ -1,5 +1,5 @@
+ service system_suspend /system/bin/hw/android.system.suspend@1.0-service
+-    class early_hal
++    class hal
+     user system
+     group system wakelock
+     capabilities BLOCK_SUSPEND
+-- 
+2.25.1
+

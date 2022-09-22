@@ -1,0 +1,60 @@
+From a315505c110252f43016075d7c6d8323f5c29925 Mon Sep 17 00:00:00 2001
+From: naz664 <nazimnavas145@gmail.com>
+Date: Mon, 12 Sep 2022 14:03:59 +0000
+Subject: [PATCH 4/4] Add changes for spark
+
+---
+ base-pre.mk |  2 +-
+ base.mk     | 19 +++++++------------
+ 2 files changed, 8 insertions(+), 13 deletions(-)
+
+diff --git a/base-pre.mk b/base-pre.mk
+index 6a317e4..ae5b289 100644
+--- a/base-pre.mk
++++ b/base-pre.mk
+@@ -1,3 +1,3 @@
+ #Use a more decent APN config
+ PRODUCT_COPY_FILES += \
+-	device/sample/etc/apns-full-conf.xml:system/etc/apns-conf.xml
++#	device/sample/etc/apns-full-conf.xml:system/etc/apns-conf.xml
+diff --git a/base.mk b/base.mk
+index d00d356..d7b3fa3 100644
+--- a/base.mk
++++ b/base.mk
+@@ -239,13 +239,13 @@ include build/make/target/product/gsi_release.mk
+ PRODUCT_COPY_FILES += \
+ 	device/phh/treble/files/com.android.deskclock_whitelist.xml:system/etc/sysconfig/com.android.deskclock_whitelist.xml
+ 
+-$(call inherit-product, vendor/lineage/config/common.mk)
+-$(call inherit-product, vendor/lineage/config/common_full.mk)
+-$(call inherit-product, vendor/lineage/config/BoardConfigSoong.mk)
+-$(call inherit-product, vendor/lineage/config/BoardConfigLineage.mk)
+-$(call inherit-product, device/lineage/sepolicy/common/sepolicy.mk)
+-#$(call inherit-product, vendor/lineage/config/bootanimation.mk)
+--include vendor/lineage/build/core/config.mk
++$(call inherit-product, vendor/spark/config/common.mk)
++$(call inherit-product, vendor/spark/config/common_full.mk)
++$(call inherit-product, vendor/spark/config/BoardConfigSoong.mk)
++$(call inherit-product, vendor/spark/config/BoardConfigSpark.mk)
++$(call inherit-product, device/spark/sepolicy/common/sepolicy.mk)
++$(call inherit-product, vendor/spark/config/bootanimation.mk)
++-include vendor/spark/build/core/config.mk
+ TARGET_NO_KERNEL_OVERRIDE := true
+ TARGET_NO_KERNEL_IMAGE := true
+ SELINUX_IGNORE_NEVERALLOWS := true
+@@ -259,12 +259,7 @@ TARGET_FACE_UNLOCK_SUPPORTED := true
+ PRODUCT_PACKAGES += \
+     GCamGOPrebuilt
+ 
+-PRODUCT_PACKAGES += \
+-    Dialer
+-
+ PRODUCT_PACKAGES += \
+     libaptX_encoder \
+     libaptXHD_encoder
+ 
+-PRODUCT_PACKAGES += \
+-    Gallery
+-- 
+2.25.1
+
