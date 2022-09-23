@@ -1,29 +1,31 @@
-From c6833bbdfd617f7af4b3397dac1f4b22ba00211c Mon Sep 17 00:00:00 2001
+From 4b190ad4034b9c38e24e6d340f9eb11ca1089b41 Mon Sep 17 00:00:00 2001
 From: naz664 <nazimnavas145@gmail.com>
-Date: Tue, 13 Sep 2022 07:50:27 +0000
-Subject: [PATCH 3/3] Remove duplicated adb-flag
+Date: Mon, 12 Sep 2022 13:56:53 +0000
+Subject: [PATCH 2/2] remove dublicated adb-flag
 
 ---
- config/common.mk | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ config/common.mk | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/config/common.mk b/config/common.mk
-index 9e38607b..2fa1611c 100644
+index b7a12b3..19852c1 100644
 --- a/config/common.mk
 +++ b/config/common.mk
-@@ -37,7 +37,7 @@ include vendor/xdroid/config/xd_signed.mk
- include vendor/xdroidui/config.mk
+@@ -34,8 +34,8 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.usb.config=adb
+ else
  
- # xd. GMS
--include vendor/google/gms/config.mk
-+#include vendor/google/gms/config.mk
- TARGET_SUPPORTS_GOOGLE_RECORDER ?= false
- TARGET_INCLUDE_STOCK_ARCORE ?= false
- TARGET_INCLUDE_LIVE_WALLPAPERS ?= false
-@@ -127,3 +127,5 @@ DISABLE_EAP_PROXY := true
- # init.rc
- $(foreach f,$(wildcard vendor/xdroid/prebuilt/etc/init/*.rc),\
-     $(eval PRODUCT_COPY_FILES += $(f):$(TARGET_COPY_OUT_SYSTEM)/etc/init/$(notdir $f)))
+ # Enable ADB authentication
+-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.adb.secure=1
+-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.usb.config=none
++#PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.adb.secure=1
++#PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.usb.config=none
+ 
+ # Disable extra StrictMode features on all non-engineering builds
+ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.strictmode.disable=true
+@@ -274,3 +274,5 @@ ifeq ($(TARGET_SUPPORTS_ADAPTIVE_CHARGING),true)
+ PRODUCT_COPY_FILES += \
+     vendor/spark/prebuilt/common/etc/sysconfig/dreamliner.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/sysconfig/dreamliner.xml
+ endif
 +
 +TARGET_NO_KERNEL_OVERRIDE := true
 -- 
