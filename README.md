@@ -1,4 +1,4 @@
-# Spark_patches
+# SparkOS_patches
 Patches for building SparkOS gsi
 (WIP)
 
