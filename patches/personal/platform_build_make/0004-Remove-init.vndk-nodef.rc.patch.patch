@@ -1,0 +1,57 @@
+From 4073573f8c6df2b95e209d3cdcf571286cf38a1e Mon Sep 17 00:00:00 2001
+From: naz664 <nazimnavas145@gmail.com>
+Date: Mon, 12 Sep 2022 14:11:58 +0000
+Subject: [PATCH 4/4] Remove-init.vndk-nodef.rc.patch
+
+---
+ target/product/gsi/Android.mk  | 12 ------------
+ target/product/gsi/init.gsi.rc |  1 -
+ target/product/gsi_release.mk  |  3 +--
+ 3 files changed, 1 insertion(+), 15 deletions(-)
+
+diff --git a/target/product/gsi/Android.mk b/target/product/gsi/Android.mk
+index 85e551d3f..53b12002f 100644
+--- a/target/product/gsi/Android.mk
++++ b/target/product/gsi/Android.mk
+@@ -248,15 +248,3 @@ LOCAL_MODULE_RELATIVE_PATH := init
+ 
+ include $(BUILD_PREBUILT)
+ 
+-
+-include $(CLEAR_VARS)
+-LOCAL_MODULE := init.vndk-nodef.rc
+-LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0
+-LOCAL_LICENSE_CONDITIONS := notice
+-LOCAL_NOTICE_FILE := build/soong/licenses/LICENSE
+-LOCAL_SRC_FILES := $(LOCAL_MODULE)
+-LOCAL_MODULE_CLASS := ETC
+-LOCAL_SYSTEM_EXT_MODULE := true
+-LOCAL_MODULE_RELATIVE_PATH := gsi
+-
+-include $(BUILD_PREBUILT)
+diff --git a/target/product/gsi/init.gsi.rc b/target/product/gsi/init.gsi.rc
+index 69c8e467b..94badc8aa 100644
+--- a/target/product/gsi/init.gsi.rc
++++ b/target/product/gsi/init.gsi.rc
+@@ -2,4 +2,3 @@
+ # Android init script for GSI required initialization
+ #
+ 
+-import /system/system_ext/etc/gsi/init.vndk-${ro.vndk.version:-nodef}.rc
+diff --git a/target/product/gsi_release.mk b/target/product/gsi_release.mk
+index 74501cd1f..f0f9cd932 100644
+--- a/target/product/gsi_release.mk
++++ b/target/product/gsi_release.mk
+@@ -59,8 +59,7 @@ PRODUCT_PACKAGES += com.android.apex.cts.shim.v1_with_prebuilts.flattened
+ # GSI specific tasks on boot
+ PRODUCT_PACKAGES += \
+     gsi_skip_mount.cfg \
+-    init.gsi.rc \
+-    init.vndk-nodef.rc \
++    init.gsi.rc
+ 
+ # Support additional VNDK snapshots
+ PRODUCT_EXTRA_VNDK_VERSIONS := \
+-- 
+2.25.1
+
