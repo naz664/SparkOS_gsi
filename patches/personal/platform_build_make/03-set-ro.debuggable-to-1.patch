@@ -1,0 +1,25 @@
+From f5cfaca88fce33c4091469adbada814ac4dd4a94 Mon Sep 17 00:00:00 2001
+From: naz664 <nazimnavas145@gmail.com>
+Date: Fri, 11 Nov 2022 13:03:45 +0000
+Subject: [PATCH] set-ro.debuggable-to-1
+
+---
+ core/main.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/core/main.mk b/core/main.mk
+index 3798bc023..23a6444bf 100644
+--- a/core/main.mk
++++ b/core/main.mk
+@@ -395,7 +395,7 @@ ifeq (true,$(strip $(enable_target_debugging)))
+   ADDITIONAL_SYSTEM_PROPERTIES += dalvik.vm.lockprof.threshold=500
+ else # !enable_target_debugging
+   # Target is less debuggable and adbd is off by default
+-  ADDITIONAL_SYSTEM_PROPERTIES += ro.debuggable=0
++#  ADDITIONAL_SYSTEM_PROPERTIES += ro.debuggable=0
+ endif # !enable_target_debugging
+ 
+ ## eng ##
+-- 
+2.25.1
+
