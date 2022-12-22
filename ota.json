@@ -1,0 +1,11 @@
+{
+  "version": "Dec-Test",
+  "date": "1671695504",
+  "variants": [
+    {
+      "name": "treble_arm64_bvN",
+      "size": "989170580",
+      "url": "https://sourceforge.net/projects/gsi-projects/files/A13/SparkOS/22122022/SparkOS-13.3-arm64_bvN-Unofficial.img.xz"
+    }
+  ]
+}
