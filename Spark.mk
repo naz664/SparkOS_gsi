@@ -15,3 +15,19 @@ TARGET_HAS_FUSEBLK_SEPOLICY_ON_VENDOR := true
 
 TARGET_FACE_UNLOCK_SUPPORTED := true
 
+# Use CCache
+USE_CCACHE := true
+
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+	persist.sys.binary_xml=false \
+	dalvik.vm.dex2oat64.enabled=true \
+
+#prebuilts
+PRODUCT_PACKAGES += \
+  OpenEUICC \
+
+# Set Bootanimation at 720P
+TARGET_BOOT_ANIMATION_RES := 720
+
+# APN
+PRODUCT_PACKAGES += apns-conf.xml
