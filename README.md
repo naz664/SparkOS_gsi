@@ -25,7 +25,7 @@ To initialize your local repository, run this command:
 
 ----------------   
 
-Clone the Manifest for adding necessary dependencies for gsi.  
+## Clone the Manifest to add necessary dependencies for gsi.  
  
     git clone https://github.com/naz664/treble_manifest.git .repo/local_manifests  -b 13
   
@@ -42,8 +42,7 @@ repo sync --force-sync --optimized-fetch --no-tags --no-clone-bundle --prune -j$
 
 ## After syncing apply the patches 
 
-
-copy the patches folder to rom folder and in rom folder 
+Copy the patches folder to rom folder and in rom folder
 
 ```
    bash patches/apply_patches.sh .
@@ -51,20 +50,34 @@ copy the patches folder to rom folder and in rom folder
 
 ## Generating Makefile
  
+ In rom folder,
+ 
  ```
     cd device/phh/treble
     bash generate.sh spark
  ```
 
+# Turn on caching to speed up build
+
+You can speed up subsequent builds by adding these lines to your ~/.bashrc OR ~/.zshrc file:
+
+```
+export USE_CCACHE=1
+export CCACHE_COMPRESS=1
+export CCACHE_MAXSIZE=50G # 50 GB
+``` 
+
 ## Build
+
+In rom folder,
 
  ```
  . build/envsetup.sh
- lunch treble_arm64_bgN-userdebug
+ ccache -M 50G -F 0
+ lunch treble_arm64_bgN-userdebug 
  make systemimage -j$(nproc --all)
- 
  ```
- 
+
  ## Troubleshoot
  
 If you face any conflicts while applying patches, You need to apply the patch manually.
