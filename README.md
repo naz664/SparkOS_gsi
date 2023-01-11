@@ -1,11 +1,12 @@
 Project Spark
 ===========
 
-## To get started with building SparkOS GSI,
+
+### To get started with building SparkOS GSI,
 you'll need to get familiar with [Git and Repo](https://source.android.com/source/using-repo.html) as well as [How to build a GSI](https://github.com/phhusson/treble_experimentations/wiki/How-to-build-a-GSI%3F).
 
 
-Create the directories
+### Create the directories
 ----------------------
 
 As a first step, you'll have to create and enter a folder with the appropriate name.
@@ -16,7 +17,7 @@ To do that, run these commands:
    cd spark
 ```
 
-To initialize your local repository, run this command:
+### To initialize your local repository, run this command:
 ------------------------------------------------------
 
 ```bash
@@ -25,13 +26,13 @@ To initialize your local repository, run this command:
 
 ----------------   
 
-## Clone the Manifest to add necessary dependencies for gsi.  
+### Clone the Manifest to add necessary dependencies for gsi:
  
     git clone https://github.com/naz664/treble_manifest.git .repo/local_manifests  -b 13
   
 
 
-Afterwards, sync the source by running this command:
+### Afterwards, sync the source by running this command:
 ----------------
 
 ```bash
@@ -40,15 +41,15 @@ repo sync --force-sync --optimized-fetch --no-tags --no-clone-bundle --prune -j$
 
 ----------------
 
-## After syncing apply the patches 
+### After syncing apply the patches:
 
 Copy the patches folder to rom folder and in rom folder
 
 ```
-   bash patches/apply_patches.sh .
+   bash patches/apply-patches.sh .
 ```
 
-## Generating Makefile
+### Generating Makefile
  
  In rom folder,
  
@@ -57,7 +58,7 @@ Copy the patches folder to rom folder and in rom folder
     bash generate.sh spark
  ```
 
-# Turn on caching to speed up build
+### Turn on caching to speed up build
 
 You can speed up subsequent builds by adding these lines to your ~/.bashrc OR ~/.zshrc file:
 
@@ -67,7 +68,7 @@ export CCACHE_COMPRESS=1
 export CCACHE_MAXSIZE=50G # 50 GB
 ``` 
 
-## Build
+### Build
 
 In rom folder,
 
@@ -78,10 +79,20 @@ In rom folder,
  make systemimage -j$(nproc --all)
  ```
 
- ## Troubleshoot
- 
-If you face any conflicts while applying patches, You need to apply the patch manually.
+### Compress
 
+After compilation,
+If you want to compress the build
+In rom folder,
+
+   ```
+        cd out/target/product/tdgsi_arm64_ab
+        xz -z -k system.img 
+   ```
+
+### Troubleshoot
+ 
+If you face any conflicts while applying patches, apply the patch manually.
 
 ## Credits
 These people have helped this project in some way or another, so they should be the ones who receive all the credit:
