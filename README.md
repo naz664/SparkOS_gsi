@@ -34,7 +34,7 @@ repo sync --force-sync --optimized-fetch --no-tags --no-clone-bundle --prune -j$
 ```
 
 
-### After syncing apply the patches:
+### After syncing, apply the patches:
 
 Copy the patches folder to rom folder and in rom folder
 
@@ -42,8 +42,8 @@ Copy the patches folder to rom folder and in rom folder
    bash patches/apply-patches.sh .
 ```
 
-## Generating Makefile
- 
+## Generating Rom Makefile
+
  In rom folder,
  
  ```
