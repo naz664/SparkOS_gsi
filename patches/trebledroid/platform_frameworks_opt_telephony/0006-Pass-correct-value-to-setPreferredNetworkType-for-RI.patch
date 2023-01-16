@@ -1,7 +1,7 @@
-From 81eb2410b423c4a611e3f820b18bc179a7ad6292 Mon Sep 17 00:00:00 2001
+From c6966faa7eec78fc6c35b713beded3f623315575 Mon Sep 17 00:00:00 2001
 From: LuK1337 <priv.luk@gmail.com>
 Date: Fri, 21 Oct 2022 20:55:05 +0200
-Subject: [PATCH 7/9] Pass correct value to setPreferredNetworkType() for RIL
+Subject: [PATCH 6/9] Pass correct value to setPreferredNetworkType() for RIL
  version < 1.4
 
 Change-Id: Id14be66a2ea4e85b6504bc03fd7d2f038185c17d
@@ -11,10 +11,10 @@ Change-Id: Id14be66a2ea4e85b6504bc03fd7d2f038185c17d
  2 files changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/src/java/com/android/internal/telephony/RIL.java b/src/java/com/android/internal/telephony/RIL.java
-index 810afd8fe6..f21c7248de 100644
+index 2766378f4f..ffb9b4a71c 100644
 --- a/src/java/com/android/internal/telephony/RIL.java
 +++ b/src/java/com/android/internal/telephony/RIL.java
-@@ -2876,7 +2876,8 @@ public class RIL extends BaseCommands implements CommandsInterface {
+@@ -2888,7 +2888,8 @@ public class RIL extends BaseCommands implements CommandsInterface {
              mMetrics.writeSetPreferredNetworkType(mPhoneId, networkType);
  
              try {

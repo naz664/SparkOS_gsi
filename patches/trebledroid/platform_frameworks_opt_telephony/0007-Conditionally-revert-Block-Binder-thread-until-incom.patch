@@ -1,7 +1,7 @@
-From 092b662dc6cd31d1750878ac211be2a8fdd85327 Mon Sep 17 00:00:00 2001
+From 7860a8cf8584ffd0179327d989d713d41c9bc72d Mon Sep 17 00:00:00 2001
 From: ExactExampl <exactxmpl@pixelexperience.org>
 Date: Tue, 11 Oct 2022 12:38:00 +0300
-Subject: [PATCH 8/9] Conditionally revert "Block Binder thread until incoming
+Subject: [PATCH 7/9] Conditionally revert "Block Binder thread until incoming
  call process completes"
 
 * Legacy IMS packages handling incoming calls in such a way that
@@ -17,10 +17,10 @@ Change-Id: I55a8f3bbca4a2b9a6bc7511e9fe2d0884a8818e5
  1 file changed, 14 insertions(+), 4 deletions(-)
 
 diff --git a/src/java/com/android/internal/telephony/imsphone/ImsPhoneCallTracker.java b/src/java/com/android/internal/telephony/imsphone/ImsPhoneCallTracker.java
-index 1d35fbea38..7f07596cfa 100644
+index 823167c926..a404c1c11f 100644
 --- a/src/java/com/android/internal/telephony/imsphone/ImsPhoneCallTracker.java
 +++ b/src/java/com/android/internal/telephony/imsphone/ImsPhoneCallTracker.java
-@@ -49,6 +49,7 @@ import android.os.Registrant;
+@@ -50,6 +50,7 @@ import android.os.Registrant;
  import android.os.RegistrantList;
  import android.os.RemoteException;
  import android.os.SystemClock;
@@ -28,7 +28,7 @@ index 1d35fbea38..7f07596cfa 100644
  import android.preference.PreferenceManager;
  import android.provider.Settings;
  import android.sysprop.TelephonyProperties;
-@@ -321,10 +322,19 @@ public class ImsPhoneCallTracker extends CallTracker implements ImsPullCall {
+@@ -322,10 +323,19 @@ public class ImsPhoneCallTracker extends CallTracker implements ImsPullCall {
  
          @Override
          public void onIncomingCall(IImsCallSession c, Bundle extras) {
