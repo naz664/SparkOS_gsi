@@ -1,0 +1,24 @@
+From 33eac9944a0af790b293d2266fe9e64b08cd06c2 Mon Sep 17 00:00:00 2001
+From: naz664 <nazimnavas145@gmail.com>
+Date: Tue, 17 Jan 2023 04:09:29 +0000
+Subject: [PATCH] Add maintainer name This prop will add maintainer name
+ (@SparkOS)
+
+---
+ system.prop | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/system.prop b/system.prop
+index 5bd720a..b4cb7de 100644
+--- a/system.prop
++++ b/system.prop
+@@ -1,5 +1,6 @@
+ ro.adb.secure=0
+ ro.debuggable=1
++ro.spark.maintainer=Nazim
+ #Some devices have sdcardfs kernel panicing on 8.0
+ #Disable for everyone for the moment
+ ro.sys.sdcardfs=0
+-- 
+2.25.1
+
