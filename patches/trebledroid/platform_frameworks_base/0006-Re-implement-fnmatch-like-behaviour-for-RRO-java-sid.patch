@@ -1,0 +1,63 @@
+From c9ed883697ccf362701ffba7963275c49bc1f13d Mon Sep 17 00:00:00 2001
+From: naz664 <nazimnavas145@gmail.com>
+Date: Tue, 17 Jan 2023 03:27:48 +0000
+Subject: [PATCH] Re-implement-fnmatch-like-behaviour-for-RRO-java-sid T: Also
+ apply to FrameworkParsingPackageUtils (@PeterCxy)
+
+---
+ core/java/android/content/pm/PackageParser.java     | 11 ++++++-----
+ .../pm/parsing/FrameworkParsingPackageUtils.java    | 13 +++++++++++--
+ 2 files changed, 17 insertions(+), 7 deletions(-)
+
+diff --git a/core/java/android/content/pm/PackageParser.java b/core/java/android/content/pm/PackageParser.java
+index 5d066310319a..5bf8f2370892 100644
+--- a/core/java/android/content/pm/PackageParser.java
++++ b/core/java/android/content/pm/PackageParser.java
+@@ -2545,14 +2545,15 @@ public class PackageParser {
+         for (int i = 0; i < propNames.length; i++) {
+             // Check property value: make sure it is both set and equal to expected value
+             final String currValue = SystemProperties.get(propNames[i]);
+-            if (propValues[i].startsWith("+") && propValues[i].endsWith("*")) {
+-                // Glob matching
+-                int idx = TextUtils.indexOf(currValue, propValues[i].substring(1, propValues[i].length() - 1));
+-                if (idx < 0) {
++                final String value = propValues[i];
++            if(value.startsWith("+")) {
++                final java.util.regex.Pattern regex = java.util.regex.Pattern.compile(value.substring(1, value.length()).replace("*", ".*"));
++                java.util.regex.Matcher matcher = regex.matcher(currValue);
++                if (!matcher.find()) {
+                     return false;
+                 }
+             } else {
+-                if (!TextUtils.equals(currValue, propValues[i])) {
++                if(!value.equals(currValue)) {
+                     return false;
+                 }
+             }
+diff --git a/core/java/android/content/pm/parsing/FrameworkParsingPackageUtils.java b/core/java/android/content/pm/parsing/FrameworkParsingPackageUtils.java
+index 3e1c5bb3d7ec..be4bef0e2ced 100644
+--- a/core/java/android/content/pm/parsing/FrameworkParsingPackageUtils.java
++++ b/core/java/android/content/pm/parsing/FrameworkParsingPackageUtils.java
+@@ -215,8 +215,17 @@ public class FrameworkParsingPackageUtils {
+         for (int i = 0; i < propNames.length; i++) {
+             // Check property value: make sure it is both set and equal to expected value
+             final String currValue = SystemProperties.get(propNames[i]);
+-            if (!TextUtils.equals(currValue, propValues[i])) {
+-                return false;
++                  final String value = propValues[i];
++            if(value.startsWith("+")) {
++                final java.util.regex.Pattern regex = java.util.regex.Pattern.compile(value.substring(1, value.length()).replace("*", ".*"));
++                java.util.regex.Matcher matcher = regex.matcher(currValue);
++                if (!matcher.find()) {
++                    return false;
++                }
++            } else {
++                if(!value.equals(currValue)) {
++                    return false;
++                }
+             }
+         }
+         return true;
+-- 
+2.25.1
+
