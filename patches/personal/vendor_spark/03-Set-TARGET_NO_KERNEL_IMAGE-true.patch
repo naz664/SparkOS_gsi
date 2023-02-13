@@ -1,0 +1,23 @@
+From 1bd761b02f667f8382a21aef13f73acb24bbbe98 Mon Sep 17 00:00:00 2001
+From: naz664 <nazimnavas145@gmail.com>
+Date: Mon, 13 Feb 2023 15:33:14 +0000
+Subject: [PATCH] Set TARGET_NO_KERNEL_IMAGE -> true. This will fix kernel
+ related errors on GSI's, Since GSI's don't use one. Signed-off-by: naz664
+ <nazimnavas145@gmail.com>
+
+---
+ config/common.mk | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/config/common.mk b/config/common.mk
+index fcef706..f1c4b5c 100644
+--- a/config/common.mk
++++ b/config/common.mk
+@@ -352,3 +352,4 @@ SKIP_ABI_CHECKS := true
+ endif
+ 
+ TARGET_NO_KERNEL_OVERRIDE := true
++TARGET_NO_KERNEL_IMAGE := true
+-- 
+2.25.1
+
