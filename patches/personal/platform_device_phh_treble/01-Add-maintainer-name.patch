@@ -1,27 +1,12 @@
-From bfb1a47574ce29b6bf451a1fb18c5c4ea30b5344 Mon Sep 17 00:00:00 2001
+From 95e6501ac83692c6b7e37808239e538d0acb4d29 Mon Sep 17 00:00:00 2001
 From: naz664 <nazimnavas145@gmail.com>
-Date: Mon, 13 Feb 2023 15:15:49 +0000
-Subject: [PATCH] Add maintainer name ft: SparkOS Signed-off-by: naz664
- <nazimnavas145@gmail.com>
+Date: Mon, 13 Feb 2023 16:01:35 +0000
+Subject: [PATCH] Add maintainer name
 
 ---
- board-base.mk | 2 +-
- system.prop   | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ system.prop | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/board-base.mk b/board-base.mk
-index 3e62db1..63134d8 100644
---- a/board-base.mk
-+++ b/board-base.mk
-@@ -10,7 +10,7 @@ BOARD_ROOT_EXTRA_FOLDERS += bt_firmware sec_storage efs persist
- BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
- 
- BUILD_BROKEN_DUP_RULES := true
--#BOARD_EXT4_SHARE_DUP_BLOCKS := true
-+BOARD_EXT4_SHARE_DUP_BLOCKS := true
- TARGET_NO_KERNEL_OVERRIDE := true
- 
- BOARD_ROOT_EXTRA_SYMLINKS := $(filter-out $(BOARD_ROOT_EXTRA_SYMLINKS),/mnt/vendor/persist:/persist)
 diff --git a/system.prop b/system.prop
 index db7c86d..d2bd73e 100644
 --- a/system.prop
