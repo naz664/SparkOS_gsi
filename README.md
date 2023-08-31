@@ -17,7 +17,7 @@ To do that, run these commands:
 ### To initialize your local repository, run this command:
 
 ```bash
-   repo init -u https://github.com/Spark-Rom/manifest -b pyro
+   repo init -u https://github.com/Spark-Rom/manifest -b pyro-next
 ```
  
 
@@ -30,7 +30,7 @@ To do that, run these commands:
 ### Afterwards, sync the source by running this command:
 
 ```bash
-repo sync --force-sync --optimized-fetch --no-tags --no-clone-bundle --prune -j$(nproc --all)
+repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags --optimized-fetch --prune
 ```
 
 
