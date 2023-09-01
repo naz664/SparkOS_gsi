@@ -1,7 +1,7 @@
-From 849beff03649dac3ce33614c6851eb8dd16f9865 Mon Sep 17 00:00:00 2001
+From 3b21f7e1e26e3c3d6a7bb8ba38f0f1fb70ab5e6e Mon Sep 17 00:00:00 2001
 From: Peter Cai <peter@typeblog.net>
 Date: Wed, 1 Jun 2022 16:56:46 -0400
-Subject: [PATCH 07/26] camera: Implement property to override default camera
+Subject: [PATCH 07/27] camera: Implement property to override default camera
 
 Complement to the frameworks/base patch.
 
@@ -11,7 +11,7 @@ Change-Id: I002bfa974bafc2cc01365eeea31c7a5dcb5a2028
  1 file changed, 22 insertions(+)
 
 diff --git a/services/camera/libcameraservice/common/CameraProviderManager.cpp b/services/camera/libcameraservice/common/CameraProviderManager.cpp
-index abaea6639f..59b59f44fb 100644
+index 43f92a9927..d9fc2ef135 100644
 --- a/services/camera/libcameraservice/common/CameraProviderManager.cpp
 +++ b/services/camera/libcameraservice/common/CameraProviderManager.cpp
 @@ -36,6 +36,7 @@
@@ -22,8 +22,8 @@ index abaea6639f..59b59f44fb 100644
  #include <android-base/logging.h>
  #include <cutils/properties.h>
  #include <hwbinder/IPCThreadState.h>
-@@ -205,6 +206,15 @@ std::vector<std::string> CameraProviderManager::getCameraDeviceIds() const {
-             deviceIds.push_back(id);
+@@ -210,6 +211,15 @@ std::vector<std::string> CameraProviderManager::getCameraDeviceIds(std::unordere
+             }
          }
      }
 +
@@ -38,7 +38,7 @@ index abaea6639f..59b59f44fb 100644
      return deviceIds;
  }
  
-@@ -271,6 +281,18 @@ std::vector<std::string> CameraProviderManager::getAPI1CompatibleCameraDeviceIds
+@@ -276,6 +286,18 @@ std::vector<std::string> CameraProviderManager::getAPI1CompatibleCameraDeviceIds
      std::sort(systemDeviceIds.begin(), systemDeviceIds.end(), sortFunc);
      deviceIds.insert(deviceIds.end(), publicDeviceIds.begin(), publicDeviceIds.end());
      deviceIds.insert(deviceIds.end(), systemDeviceIds.begin(), systemDeviceIds.end());
@@ -58,5 +58,5 @@ index abaea6639f..59b59f44fb 100644
  }
  
 -- 
-2.25.1
+2.34.1
 

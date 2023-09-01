@@ -1,33 +1,25 @@
-From 3d0acf16449b2919045f457257361b253d606d69 Mon Sep 17 00:00:00 2001
+From 724be2c7d2b797b231506a64bbd7c308fb6c324c Mon Sep 17 00:00:00 2001
 From: naz664 <nazimnavas145@gmail.com>
 Date: Wed, 21 Dec 2022 12:07:08 +0000
-Subject: [PATCH] remove dublicated adb-flag
+Subject: [PATCH 2/3] remove dublicated adb-flag
 
 ---
- config/common.mk | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ config/common.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/config/common.mk b/config/common.mk
-index 67cd744..543bfd4 100644
+index 2199a9e..ccd5d2b 100644
 --- a/config/common.mk
 +++ b/config/common.mk
-@@ -34,8 +34,8 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.usb.config=adb
+@@ -21,7 +21,7 @@ ifeq ($(TARGET_BUILD_VARIANT),eng)
+ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.adb.secure=0
  else
- 
  # Enable ADB authentication
 -PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.adb.secure=1
--PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.usb.config=none
-+#PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.adb.secure=1
-+#PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.usb.config=none
++# PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.adb.secure=1
  
  # Disable extra StrictMode features on all non-engineering builds
  PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.strictmode.disable=true
-@@ -335,3 +335,5 @@ GLOBAL_THINLTO := true
- USE_THINLTO_CACHE := true
- SKIP_ABI_CHECKS := true
- endif
-+
-+TARGET_NO_KERNEL_OVERRIDE := true
 -- 
-2.25.1
+2.34.1
 
