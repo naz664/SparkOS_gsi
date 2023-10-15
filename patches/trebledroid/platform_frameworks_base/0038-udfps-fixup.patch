@@ -1,0 +1,53 @@
+From a1ec30c16dc3979a3476b1ccc2c03020c7423d6a Mon Sep 17 00:00:00 2001
+From: naz664 <nazimnavas145@gmail.com>
+Date: Sun, 15 Oct 2023 12:10:21 +0000
+Subject: [PATCH 7/7] udfps: fixup!
+
+---
+ .../server/biometrics/AuthService.java        | 26 +------------------
+ 1 file changed, 1 insertion(+), 25 deletions(-)
+
+diff --git a/services/core/java/com/android/server/biometrics/AuthService.java b/services/core/java/com/android/server/biometrics/AuthService.java
+index b9555b0f226b..a08375fb5dda 100644
+--- a/services/core/java/com/android/server/biometrics/AuthService.java
++++ b/services/core/java/com/android/server/biometrics/AuthService.java
+@@ -719,31 +719,6 @@ public class AuthService extends SystemService {
+             fodFileObserver.startWatching();
+         }
+ 
+-        String xiaomiFodPressedStatusPath = "/sys/class/touch/touch_dev/fod_press_status";
+-        if(new File(xiaomiFodPressedStatusPath).exists() && mXiaomiFingerprint != null) {
+-            fodFileObserver = new FileObserver(xiaomiFodPressedStatusPath, FileObserver.MODIFY) {
+-                @Override
+-                public void onEvent(int event, String path) {
+-                    String isFodPressed = readFile(xiaomiFodPressedStatusPath);
+-                    Slog.d("PHH-Enroll", "Fod pressed status: " + isFodPressed);
+-                    Slog.d("PHH-Enroll", "Within xiaomi scenario for FOD");
+-
+-                    try {
+-                    if("0".equals(isFodPressed)) {
+-                        Slog.d("PHH-Enroll", "Fod un-pressed!");
+-                        mXiaomiFingerprint.extCmd(android.os.SystemProperties.getInt("phh.xiaomi.fod.enrollment.id", 4), 0);
+-                    } else if("1".equals(isFodPressed)) {
+-                        Slog.d("PHH-Enroll", "Fod pressed!");
+-                        mXiaomiFingerprint.extCmd(android.os.SystemProperties.getInt("phh.xiaomi.fod.enrollment.id", 4), 1);
+-                    }
+-                    } catch(Exception e) {
+-                        Slog.d("PHH-Enroll", "Failed Xiaomi async extcmd", e);
+-                    }
+-                }
+-            };
+-            fodFileObserver.startWatching();
+-        }
+-
+         String asusGhbmOnAchieved = "/sys/class/drm/ghbm_on_achieved";
+         if( (new File(asusGhbmOnAchieved)).exists()) {
+             fodFileObserver = new FileObserver(asusGhbmOnAchieved, FileObserver.MODIFY) {
+@@ -1160,3 +1135,4 @@ public class AuthService extends SystemService {
+             return null;
+         }
+ }
++}
+-- 
+2.34.1
+

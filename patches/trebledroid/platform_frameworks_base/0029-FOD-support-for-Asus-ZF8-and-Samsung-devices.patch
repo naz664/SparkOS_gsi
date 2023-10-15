@@ -1,19 +1,18 @@
-From 1bd35f696ab783fcbe7ecddee76549584a11a5e4 Mon Sep 17 00:00:00 2001
-From: Pierre-Hugues Husson <phh@phh.me>
-Date: Sun, 18 Dec 2022 18:20:40 -0500
-Subject: [PATCH 29/36] FOD support for Asus ZF8 and Samsung devices
+From b260611700022db35eb02b29101ac35a8f378a0a Mon Sep 17 00:00:00 2001
+From: naz664 <nazimnavas145@gmail.com>
+Date: Sun, 15 Oct 2023 06:08:20 +0000
+Subject: [PATCH 1/7] FOD support for Asus ZF8 and Samsung devices Thanks Asus
+ for providing a free device to make this support And thanks @davigamer987 for
+ donating enough to get a Samsung FOD device to make this
 
-Thanks Asus for providing a free device to make this support
-And thanks @davigamer987 for donating enough to get a Samsung FOD device
-to make this
 ---
  packages/SystemUI/Android.bp                  |   1 +
  packages/SystemUI/res/values/config.xml       |   2 +-
- .../biometrics/UdfpsControllerOverlay.kt      |   7 +-
+ .../biometrics/UdfpsControllerOverlay.kt      |   9 +-
  .../android/systemui/biometrics/UdfpsView.kt  | 161 ++++++++++--
  services/core/Android.bp                      |   7 +-
- .../server/biometrics/AuthService.java        | 236 +++++++++++++++++-
- 6 files changed, 383 insertions(+), 31 deletions(-)
+ .../server/biometrics/AuthService.java        | 240 +++++++++++++++++-
+ 6 files changed, 385 insertions(+), 35 deletions(-)
 
 diff --git a/packages/SystemUI/Android.bp b/packages/SystemUI/Android.bp
 index 7ac7a2fc7880..e039b9eb8a5f 100644
@@ -28,10 +27,10 @@ index 7ac7a2fc7880..e039b9eb8a5f 100644
      manifest: "AndroidManifest.xml",
      additional_manifests: ["LineageManifest.xml"],
 diff --git a/packages/SystemUI/res/values/config.xml b/packages/SystemUI/res/values/config.xml
-index ab6bd7abcaae..818cd0fd69b5 100644
+index 7bd3cc7f22ad..adc96e701031 100644
 --- a/packages/SystemUI/res/values/config.xml
 +++ b/packages/SystemUI/res/values/config.xml
-@@ -591,7 +591,7 @@
+@@ -592,7 +592,7 @@
  
      <!-- The radius of the enrollment progress bar, in dp -->
      <integer name="config_udfpsEnrollProgressBar" translatable="false">
@@ -41,21 +40,24 @@ index ab6bd7abcaae..818cd0fd69b5 100644
  
      <!-- The time (in ms) needed to trigger the lock icon view's long-press affordance -->
 diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsControllerOverlay.kt b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsControllerOverlay.kt
-index baa46e875529..fdbdf90f03e8 100644
+index 277cde1efd5e..8d2cb39c6e98 100644
 --- a/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsControllerOverlay.kt
 +++ b/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsControllerOverlay.kt
-@@ -120,7 +120,9 @@ class UdfpsControllerOverlay @JvmOverloads constructor(
+@@ -120,10 +120,10 @@ class UdfpsControllerOverlay @JvmOverloads constructor(
          gravity = android.view.Gravity.TOP or android.view.Gravity.LEFT
          layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
          flags = (Utils.FINGERPRINT_OVERLAY_LAYOUT_PARAM_FLAGS or
+-                WindowManager.LayoutParams.FLAG_DIM_BEHIND or
 -                WindowManager.LayoutParams.FLAG_SPLIT_TOUCH)
+-        privateFlags = WindowManager.LayoutParams.PRIVATE_FLAG_TRUSTED_OVERLAY
 +                WindowManager.LayoutParams.FLAG_SPLIT_TOUCH) or
 +                WindowManager.LayoutParams.FLAG_DIM_BEHIND
-+        dimAmount = 0.0f
-         privateFlags = WindowManager.LayoutParams.PRIVATE_FLAG_TRUSTED_OVERLAY
+         dimAmount = 0.0f
++        privateFlags = WindowManager.LayoutParams.PRIVATE_FLAG_TRUSTED_OVERLAY
+ 
          // Avoid announcing window title.
          accessibilityTitle = " "
-@@ -189,6 +191,9 @@ class UdfpsControllerOverlay @JvmOverloads constructor(
+@@ -198,6 +198,9 @@ class UdfpsControllerOverlay @JvmOverloads constructor(
                      windowManager.addView(this, coreLayoutParams.updateDimensions(animation))
                      sensorRect = sensorBounds
                      touchExplorationEnabled = accessibilityManager.isTouchExplorationEnabled
@@ -296,7 +298,7 @@ index 1e2e6c8bb253..cdaad81b9222 100644
      }
  }
 diff --git a/services/core/Android.bp b/services/core/Android.bp
-index f4d582b5f1a1..03055e2855b6 100644
+index f4d582b5f1a1..68ac3911ffdd 100644
 --- a/services/core/Android.bp
 +++ b/services/core/Android.bp
 @@ -181,7 +181,12 @@ java_library_static {
@@ -304,7 +306,7 @@ index f4d582b5f1a1..03055e2855b6 100644
          "kotlinx_coroutines_android",
          "kotlinx_coroutines",
 -        "vendor.samsung.hardware.sysinput-V1.2-java", // HIDL
-+        // HIDL
++         // HIDL
 +        "vendor.samsung.hardware.sysinput-V1.2-java",
 +        "vendor.goodix.hardware.biometrics.fingerprint-V2.1-java",
 +        "vendor.samsung.hardware.biometrics.fingerprint-V3.0-java",
@@ -314,7 +316,7 @@ index f4d582b5f1a1..03055e2855b6 100644
      javac_shard_size: 50,
  }
 diff --git a/services/core/java/com/android/server/biometrics/AuthService.java b/services/core/java/com/android/server/biometrics/AuthService.java
-index 7e6f35acc398..e3d951648432 100644
+index 7e6f35acc398..dad82e5264e4 100644
 --- a/services/core/java/com/android/server/biometrics/AuthService.java
 +++ b/services/core/java/com/android/server/biometrics/AuthService.java
 @@ -77,6 +77,22 @@ import java.util.ArrayList;
@@ -422,8 +424,12 @@ index 7e6f35acc398..e3d951648432 100644
      }
  
      /**
-@@ -775,18 +859,104 @@ public class AuthService extends SystemService {
-                 ? modality : (modality & ~BiometricAuthenticator.TYPE_CREDENTIAL);
+@@ -772,21 +856,107 @@ public class AuthService extends SystemService {
+     @BiometricAuthenticator.Modality
+     private static int getCredentialBackupModality(@BiometricAuthenticator.Modality int modality) {
+         return modality == BiometricAuthenticator.TYPE_CREDENTIAL
+-                ? modality : (modality & ~BiometricAuthenticator.TYPE_CREDENTIAL);
++               ? modality : (modality & ~BiometricAuthenticator.TYPE_CREDENTIAL);
      }
  
 +    private int[] dynamicUdfpsProps() {
@@ -511,7 +517,7 @@ index 7e6f35acc398..e3d951648432 100644
              @BiometricManager.Authenticators.Types int strength) {
          // The existence of config_udfps_sensor_props indicates that the sensor is UDFPS.
 -        final int[] udfpsProps = getContext().getResources().getIntArray(
-+        int[] udfpsProps = getContext().getResources().getIntArray(
++                int[] udfpsProps = getContext().getResources().getIntArray(
                  com.android.internal.R.array.config_udfps_sensor_props);
  
          // Non-empty workaroundLocations indicates that the sensor is SFPS.
@@ -529,10 +535,13 @@ index 7e6f35acc398..e3d951648432 100644
  
          // config_is_powerbutton_fps indicates whether device has a power button fingerprint sensor.
          final boolean isPowerbuttonFps = getContext().getResources().getBoolean(
-@@ -854,4 +1024,66 @@ public class AuthService extends SystemService {
+@@ -852,6 +1022,68 @@ public class AuthService extends SystemService {
+         return new SensorPropertiesInternal(sensorId,
+                 Utils.authenticatorStrengthToPropertyStrength(strength), maxEnrollmentsPerUser,
                  componentInfo, resetLockoutRequiresHardwareAuthToken,
-                 resetLockoutRequiresChallenge);
-     }
+-                resetLockoutRequiresChallenge);
++              	  resetLockoutRequiresChallenge);
++    }
 +
 +    private static boolean samsungHasCmd(String cmd) {
 +        try {
@@ -574,7 +583,7 @@ index 7e6f35acc398..e3d951648432 100644
 +        } catch(Exception e) {
 +            android.util.Log.d("PHH", "Failed writing to " + path + ": " + value);
 +        }
-+    }
+     }
 +
 +    private static void writeFile(File file, String value) {
 +        try {

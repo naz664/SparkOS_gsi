@@ -1,7 +1,7 @@
-From 8e60f55ce0b0768c25a6e0b8d4ff31449aa1924f Mon Sep 17 00:00:00 2001
+From ebaf78e343c4ac85703dcea181279d4627dc0eaf Mon Sep 17 00:00:00 2001
 From: Pierre-Hugues Husson <phh@phh.me>
 Date: Sat, 17 Jun 2023 08:31:55 -0400
-Subject: [PATCH 34/36] Add Mediatek power hints on touch
+Subject: [PATCH 3/7] Add Mediatek power hints on touch
 
 Mediatek has multiple HALs (which existed concurrently), so it is a bit
 of a mess.
@@ -25,19 +25,19 @@ smoother.
  2 files changed, 52 insertions(+)
 
 diff --git a/services/core/Android.bp b/services/core/Android.bp
-index 03055e2855b6..2386b54abf7f 100644
+index 68ac3911ffdd..363d1fe02a20 100644
 --- a/services/core/Android.bp
 +++ b/services/core/Android.bp
 @@ -182,6 +182,7 @@ java_library_static {
          "kotlinx_coroutines_android",
          "kotlinx_coroutines",
-         // HIDL
+          // HIDL
 +        "vendor.mediatek.hardware.mtkpower-V1.1-java",
          "vendor.samsung.hardware.sysinput-V1.2-java",
          "vendor.goodix.hardware.biometrics.fingerprint-V2.1-java",
          "vendor.samsung.hardware.biometrics.fingerprint-V3.0-java",
 diff --git a/services/core/java/com/android/server/wm/DisplayPolicy.java b/services/core/java/com/android/server/wm/DisplayPolicy.java
-index 489fdc44555c..8d3708d8e0f3 100644
+index 2f32d61805f9..b88c912de288 100644
 --- a/services/core/java/com/android/server/wm/DisplayPolicy.java
 +++ b/services/core/java/com/android/server/wm/DisplayPolicy.java
 @@ -224,6 +224,9 @@ public class DisplayPolicy {
@@ -76,7 +76,7 @@ index 489fdc44555c..8d3708d8e0f3 100644
                                      Boost.INTERACTION, duration);
                          }
 +
-+                        if(mOldMtkPerf != null) {
++                       if(mOldMtkPerf != null) {
 +                            try {
 +                                android.util.Log.d("PHH-Power", "mtk1 fling power hint");
 +                                int hint = 36; // MTKPOWER_HINT_APP_TOUCH

@@ -1,0 +1,31 @@
+From 513f08dade75dce317b22ef09d67f988c81838f5 Mon Sep 17 00:00:00 2001
+From: naz664 <nazimnavas145@gmail.com>
+Date: Mon, 26 Dec 2022 11:54:04 +0000
+Subject: [PATCH] remove su from no-su builds
+
+---
+ target/product/base_system.mk | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/target/product/base_system.mk b/target/product/base_system.mk
+index 9935ffe8b..5095760ab 100644
+--- a/target/product/base_system.mk
++++ b/target/product/base_system.mk
+@@ -397,10 +397,10 @@ PRODUCT_PACKAGES_DEBUG := \
+     unwind_reg_info \
+     unwind_symbols \
+ 
+-ifeq ($(SPARK_BUILD),)
+-PRODUCT_PACKAGES_DEBUG += \
+-    su
+-endif
++#ifeq ($(SPARK_BUILD),)
++#PRODUCT_PACKAGES_DEBUG += \
++#    su
++#endif
+ 
+ # The set of packages whose code can be loaded by the system server.
+ PRODUCT_SYSTEM_SERVER_APPS += \
+-- 
+2.34.1
+
